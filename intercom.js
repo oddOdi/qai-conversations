@@ -3,15 +3,11 @@
 // ---Conversations---
 // Generate intercom conversation api query
 
-import 'moment';
 
 const now = moment()
 
 const hourTimeFrame = 12
 
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 function generateIntercomQuery(hourTimeFrame){
 
@@ -52,27 +48,50 @@ function generateIntercomQuery(hourTimeFrame){
 }
 
 
-async function fetchIntercomQueryResult(query,cursor){
-
-    try{
-
-    const headers = {Authorization:`Bearer ${INTERCOM_API_KEY}`}
-
-    const method = 'POST'
-
-    const body = query
-
-    const urlIntercomSearch = 'https://api.intercom.io/conversations/search'
 
 
-    const response = await fetch(urlIntercomSearch,{method,headers,body})
+
+async function getConversations(query){
     
-    } catch (error){
-
+    const method = 'POST'
+    const body = query
+    const urlIntercomSearch = 'https://api.intercom.io/conversations/search'
+    
+    try{
+        const page = await callIntercom(urlIntercomSearch,method,body)
+        return {status:'success',page,error:null}
+    }
+    catch(error){
+        return {status:'failure',page:null,error}
     }
 
 } 
 
+
+
+async function callIntercom(url, method, body) {
+    const headers = {
+    Authorization: `Bearer ${process.env.INTERCOM_API_KEY}`,
+    'Content-Type': 'application/json',
+  }
+
+  try {
+    console.log('Calling Intercom…')
+    const response = await fetchWithBackoff(
+      url,
+      { method, headers, body },
+      defaultBackoff
+    )
+    return { status: 'success', response, error: null }
+  } catch (error) {
+    console.error('Error calling Intercom!', error)
+    return { status: 'failure', response: null, error }
+  }
+}
+
+module.exports = {
+  callIntercom,getConversations,generateIntercomQuery
+}
 
 
 // Loop through paginated conversations
@@ -82,28 +101,6 @@ async function fetchIntercomQueryResult(query,cursor){
 
 
 
-// ---Prompt---
-// Fetch prompt and response schema from db (google sheet :p)
-// 
-// ---QA---
-// For each conversation
-//      Fetch transcript from intercom
-//      Transform response to single string
-//      Post to responses open ai api endpoint
-//      Parse response
-//      Save evaluation in db
-//
-// ------Execution data storage------
-//
-// Run initiation (date, run uuid)
-// Conversation fetch (conversations fetched)
-// Prompt fetch (version)
-// Run completion (duration)
-// 
-// 
-// ---Secrets loading---
-// require('dotenv').config();
-// process.env.INTERCOM_API_KEY
-// process.env.OPENAI_API_KEY
+
 
 
