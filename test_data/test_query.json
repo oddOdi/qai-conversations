@@ -1,0 +1,1 @@
+{"data":{"operator":"AND","value":[{"field":"statistics.last_close_at","operator":">","value":1754285921},{"field":"statistics.last_close_at","operator":"<","value":1754329121},{"field":"state","operator":"=","value":"closed"},{"field":"admin_assignee_id","operator":"!=","value":""},{"field":"team_assignee_id","operator":"!=","value":""}]}}
