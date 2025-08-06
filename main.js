@@ -1,11 +1,13 @@
 require('dotenv').config();
-
-
-
 var moment = require('moment')
+const {getAllPaginatedConversations,generateIntercomQuery} = require('./conversations/intercom')
 
-const testData = require('./test_data/test_query.json')
-console.log(testData)
+const query = generateIntercomQuery()
+// console.log(query)
+const conversations = getAllPaginatedConversations(query)
+return conversations
+// const testData = require('./test_data/test_query.json')
+// console.log(testData)
 
 
 
@@ -13,6 +15,11 @@ console.log(testData)
 
 // ---Prompt---
 // Fetch prompt and response schema from db (google sheet :p)
+//
+// ---Conversations---
+// Loop through paginated conversations
+
+// Filter out convesation by attributes not covered by intercom
 // 
 // ---QA---
 // For each conversation
