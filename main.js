@@ -1,11 +1,13 @@
 require('dotenv').config();
 var moment = require('moment')
-const {getAllPaginatedConversations,generateIntercomQuery} = require('./conversations/intercom')
+const {getAllConversations} = require('./conversations/intercom')
 
-const query = generateIntercomQuery()
+const allConvos = getAllConversations(72)
+return allConvos
+// const query = generateIntercomQuery()
 // console.log(query)
-const conversations = getAllPaginatedConversations(query)
-return conversations
+// const conversations = getAllPaginatedConversations(query)
+// return conversations
 // const testData = require('./test_data/test_query.json')
 // console.log(testData)
 
